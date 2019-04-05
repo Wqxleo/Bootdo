@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.idle.dao.IdleDao">
+
+	<select id="get" resultType="com.bootdo.idle.domain.IdleDO">
+		select `idle_id`,`publisher_id`,`university_id`,`description`,`photo_path`,`price`,`publisher_contactway` from idle where idle_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.idle.domain.IdleDO">
+		select `idle_id`,`publisher_id`,`university_id`,`description`,`photo_path`,`price`,`publisher_contactway` from idle
+        <where>  
+		  		  <if test="idleId != null and idleId != ''"> and idle_id = #{idleId} </if>
+		  		  <if test="publisherId != null and publisherId != ''"> and publisher_id = #{publisherId} </if>
+		  		  <if test="universityId != null and universityId != ''"> and university_id = #{universityId} </if>
+		  		  <if test="description != null and description != ''"> and description = #{description} </if>
+		  		  <if test="photoPath != null and photoPath != ''"> and photo_path = #{photoPath} </if>
+		  		  <if test="price != null and price != ''"> and price = #{price} </if>
+		  		  <if test="publisherContactway != null and publisherContactway != ''"> and publisher_contactway = #{publisherContactway} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by idle_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from idle
+		 <where>  
+		  		  <if test="idleId != null and idleId != ''"> and idle_id = #{idleId} </if>
+		  		  <if test="publisherId != null and publisherId != ''"> and publisher_id = #{publisherId} </if>
+		  		  <if test="universityId != null and universityId != ''"> and university_id = #{universityId} </if>
+		  		  <if test="description != null and description != ''"> and description = #{description} </if>
+		  		  <if test="photoPath != null and photoPath != ''"> and photo_path = #{photoPath} </if>
+		  		  <if test="price != null and price != ''"> and price = #{price} </if>
+		  		  <if test="publisherContactway != null and publisherContactway != ''"> and publisher_contactway = #{publisherContactway} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.idle.domain.IdleDO" useGeneratedKeys="true" keyProperty="idleId">
+		insert into idle
+		(
+			`publisher_id`, 
+			`university_id`, 
+			`description`, 
+			`photo_path`, 
+			`price`, 
+			`publisher_contactway`
+		)
+		values
+		(
+			#{publisherId}, 
+			#{universityId}, 
+			#{description}, 
+			#{photoPath}, 
+			#{price}, 
+			#{publisherContactway}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.idle.domain.IdleDO">
+		update idle 
+		<set>
+			<if test="publisherId != null">`publisher_id` = #{publisherId}, </if>
+			<if test="universityId != null">`university_id` = #{universityId}, </if>
+			<if test="description != null">`description` = #{description}, </if>
+			<if test="photoPath != null">`photo_path` = #{photoPath}, </if>
+			<if test="price != null">`price` = #{price}, </if>
+			<if test="publisherContactway != null">`publisher_contactway` = #{publisherContactway}</if>
+		</set>
+		where idle_id = #{idleId}
+	</update>
+	
+	<delete id="remove">
+		delete from idle where idle_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from idle where idle_id in 
+		<foreach item="idleId" collection="array" open="(" separator="," close=")">
+			#{idleId}
+		</foreach>
+	</delete>
+
+</mapper>

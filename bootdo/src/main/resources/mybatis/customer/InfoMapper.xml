@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.customer.dao.InfoDao">
+
+	<select id="get" resultType="com.bootdo.customer.domain.InfoDO">
+		select `customer_id`,`customer_class`,`customer_name`,`customer_tellphone` from customer_info where customer_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.customer.domain.InfoDO">
+		select `customer_id`,`customer_class`,`customer_name`,`customer_tellphone` from customer_info
+        <where>  
+		  		  <if test="customerId != null and customerId != ''"> and customer_id = #{customerId} </if>
+		  		  <if test="customerClass != null and customerClass != ''"> and customer_class = #{customerClass} </if>
+		  		  <if test="customerName != null and customerName != ''"> and customer_name = #{customerName} </if>
+		  		  <if test="customerTellphone != null and customerTellphone != ''"> and customer_tellphone = #{customerTellphone} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by customer_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from customer_info
+		 <where>  
+		  		  <if test="customerId != null and customerId != ''"> and customer_id = #{customerId} </if>
+		  		  <if test="customerClass != null and customerClass != ''"> and customer_class = #{customerClass} </if>
+		  		  <if test="customerName != null and customerName != ''"> and customer_name = #{customerName} </if>
+		  		  <if test="customerTellphone != null and customerTellphone != ''"> and customer_tellphone = #{customerTellphone} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.customer.domain.InfoDO" useGeneratedKeys="true" keyProperty="customerId">
+		insert into customer_info
+		(
+			`customer_class`, 
+			`customer_name`, 
+			`customer_tellphone`
+		)
+		values
+		(
+			#{customerClass}, 
+			#{customerName}, 
+			#{customerTellphone}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.customer.domain.InfoDO">
+		update customer_info 
+		<set>
+			<if test="customerClass != null">`customer_class` = #{customerClass}, </if>
+			<if test="customerName != null">`customer_name` = #{customerName}, </if>
+			<if test="customerTellphone != null">`customer_tellphone` = #{customerTellphone}</if>
+		</set>
+		where customer_id = #{customerId}
+	</update>
+	
+	<delete id="remove">
+		delete from customer_info where customer_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from customer_info where customer_id in 
+		<foreach item="customerId" collection="array" open="(" separator="," close=")">
+			#{customerId}
+		</foreach>
+	</delete>
+
+</mapper>

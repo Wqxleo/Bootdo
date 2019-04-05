@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.request.dao.RequestDao">
+
+	<select id="get" resultType="com.bootdo.request.domain.RequestDO">
+		select `request_id`,`publisher_id`,`university_id`,`description`,`publish_contact` from request where request_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.request.domain.RequestDO">
+		select `request_id`,`publisher_id`,`university_id`,`description`,`publish_contact` from request
+        <where>  
+		  		  <if test="requestId != null and requestId != ''"> and request_id = #{requestId} </if>
+		  		  <if test="publisherId != null and publisherId != ''"> and publisher_id = #{publisherId} </if>
+		  		  <if test="universityId != null and universityId != ''"> and university_id = #{universityId} </if>
+		  		  <if test="description != null and description != ''"> and description = #{description} </if>
+		  		  <if test="publishContact != null and publishContact != ''"> and publish_contact = #{publishContact} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by request_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from request
+		 <where>  
+		  		  <if test="requestId != null and requestId != ''"> and request_id = #{requestId} </if>
+		  		  <if test="publisherId != null and publisherId != ''"> and publisher_id = #{publisherId} </if>
+		  		  <if test="universityId != null and universityId != ''"> and university_id = #{universityId} </if>
+		  		  <if test="description != null and description != ''"> and description = #{description} </if>
+		  		  <if test="publishContact != null and publishContact != ''"> and publish_contact = #{publishContact} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.request.domain.RequestDO" useGeneratedKeys="true" keyProperty="requestId">
+		insert into request
+		(
+			`publisher_id`, 
+			`university_id`, 
+			`description`, 
+			`publish_contact`
+		)
+		values
+		(
+			#{publisherId}, 
+			#{universityId}, 
+			#{description}, 
+			#{publishContact}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.request.domain.RequestDO">
+		update request 
+		<set>
+			<if test="publisherId != null">`publisher_id` = #{publisherId}, </if>
+			<if test="universityId != null">`university_id` = #{universityId}, </if>
+			<if test="description != null">`description` = #{description}, </if>
+			<if test="publishContact != null">`publish_contact` = #{publishContact}</if>
+		</set>
+		where request_id = #{requestId}
+	</update>
+	
+	<delete id="remove">
+		delete from request where request_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from request where request_id in 
+		<foreach item="requestId" collection="array" open="(" separator="," close=")">
+			#{requestId}
+		</foreach>
+	</delete>
+
+</mapper>

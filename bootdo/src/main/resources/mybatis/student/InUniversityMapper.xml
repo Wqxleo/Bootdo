@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.student.dao.InUniversityDao">
+
+	<select id="get" resultType="com.bootdo.student.domain.InUniversityDO">
+		select `id`,`name`,`university_id`,`student_id`,`is_register` from student_in_university where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.student.domain.InUniversityDO">
+		select `id`,`name`,`university_id`,`student_id`,`is_register` from student_in_university
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="universityId != null and universityId != ''"> and university_id = #{universityId} </if>
+		  		  <if test="studentId != null and studentId != ''"> and student_id = #{studentId} </if>
+		  		  <if test="isRegister != null and isRegister != ''"> and is_register = #{isRegister} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from student_in_university
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="universityId != null and universityId != ''"> and university_id = #{universityId} </if>
+		  		  <if test="studentId != null and studentId != ''"> and student_id = #{studentId} </if>
+		  		  <if test="isRegister != null and isRegister != ''"> and is_register = #{isRegister} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.student.domain.InUniversityDO">
+		insert into student_in_university
+		(
+			`id`, 
+			`name`, 
+			`university_id`, 
+			`student_id`, 
+			`is_register`
+		)
+		values
+		(
+			#{id}, 
+			#{name}, 
+			#{universityId}, 
+			#{studentId}, 
+			#{isRegister}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.student.domain.InUniversityDO">
+		update student_in_university 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="universityId != null">`university_id` = #{universityId}, </if>
+			<if test="studentId != null">`student_id` = #{studentId}, </if>
+			<if test="isRegister != null">`is_register` = #{isRegister}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from student_in_university where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from student_in_university where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

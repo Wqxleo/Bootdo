@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="idle_id" name="idle_id" th:value="${idle.idle_id}"  type="hidden">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">发布者编号：</label>
+								<div class="col-sm-8">
+									<input id="publisherId" name="publisherId" th:value="${idle.publisherId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">所属学校编号：</label>
+								<div class="col-sm-8">
+									<input id="universityId" name="universityId" th:value="${idle.universityId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">物品描述：</label>
+								<div class="col-sm-8">
+									<input id="description" name="description" th:value="${idle.description}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">图片路径：</label>
+								<div class="col-sm-8">
+									<input id="photoPath" name="photoPath" th:value="${idle.photoPath}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">价格：</label>
+								<div class="col-sm-8">
+									<input id="price" name="price" th:value="${idle.price}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">发布者联系方式：</label>
+								<div class="col-sm-8">
+									<input id="publisherContactway" name="publisherContactway" th:value="${idle.publisherContactway}" class="form-control" type="text">
+								</div>
+							</div>
+																					<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/idle/idle/edit.js">
+	</script>
+</body>
+</html>
